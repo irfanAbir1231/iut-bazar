@@ -1,83 +1,6 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ListingCard from "../components/ListingCard";
-
-const demoListings = [
-  // Items
-  {
-    id: 1,
-    title: "Used Laptop",
-    price: 25000,
-    condition: "Good",
-    university: "IUT",
-    imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlygWcz51gyDexlstejSgZZ2LSxqF4rBz3wQ&s?text=Laptop",
-    category: "Electronics",
-  },
-  {
-    id: 2,
-    title: "Mountain Bike",
-    price: 12000,
-    condition: "Fair",
-    university: "DU",
-    imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlygWcz51gyDexlstejSgZZ2LSxqF4rBz3wQ&s?text=Bike",
-    category: "Vehicles",
-  },
-  {
-    id: 3,
-    title: "Desk Chair",
-    price: 2000,
-    condition: "Good",
-    university: "IUT",
-    imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlygWcz51gyDexlstejSgZZ2LSxqF4rBz3wQ&s?text=Chair",
-    category: "Furniture",
-  },
-  // Services
-  {
-    id: 4,
-    title: "Math Tutoring",
-    price: "500/hr",
-    condition: "N/A",
-    university: "BRACU",
-    imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlygWcz51gyDexlstejSgZZ2LSxqF4rBz3wQ&s?text=Tutoring",
-    category: "Service",
-  },
-  {
-    id: 5,
-    title: "Laundry Service",
-    price: "150/hr",
-    condition: "N/A",
-    university: "IUT",
-    imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlygWcz51gyDexlstejSgZZ2LSxqF4rBz3wQ&s?text=Laundry",
-    category: "Service",
-  },
-  {
-    id: 6,
-    title: "Food Delivery",
-    price: "100/hr",
-    condition: "N/A",
-    university: "DU",
-    imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlygWcz51gyDexlstejSgZZ2LSxqF4rBz3wQ&s?text=Delivery",
-    category: "Service",
-  },
-  {
-    id: 7,
-    title: "Car Wash",
-    price: "250/hr",
-    condition: "N/A",
-    university: "IUT",
-    imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlygWcz51gyDexlstejSgZZ2LSxqF4rBz3wQ&s?text=Car+Wash",
-    category: "Service",
-  },
-  {
-    id: 8,
-    title: "Home Cooking",
-    price: "300/hr",
-    condition: "N/A",
-    university: "BRACU",
-    imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlygWcz51gyDexlstejSgZZ2LSxqF4rBz3wQ&s?text=Cooking",
-    category: "Service",
-  },
-];
 
 const categories = ["All", "Electronics", "Service", "Vehicles"];
 const conditions = ["All", "New", "Good", "Fair", "N/A"];
@@ -105,7 +28,32 @@ export default function ListingsPage() {
   const [condition, setCondition] = useState("All");
   const [university, setUniversity] = useState("All");
 
-  const filtered = demoListings.filter((l) => {
+  const [listings, setListings] = useState([]);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchListings = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const res = await fetch("http://localhost:5000/api/listings", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (!res.ok) {
+          throw new Error("Failed to fetch listings");
+        }
+        const data = await res.json();
+        setListings(data);
+      } catch (err: any) {
+        setError(err.message || "Something went wrong");
+      }
+    };
+
+    fetchListings();
+  }, []);
+
+  const filtered = listings.filter((l: any) => {
     const matchesQuery = l.title.toLowerCase().includes(query.toLowerCase());
     const matchesCategory = category === "All" || l.category === category;
     const matchesCondition = condition === "All" || l.condition === condition;
@@ -119,7 +67,9 @@ export default function ListingsPage() {
   return (
     <div className="min-h-screen bg-gray-50 py-10 flex flex-col items-center">
       <div className="max-w-6xl w-full bg-white rounded-2xl shadow-xl p-8 mb-8">
-        <h1 className="text-3xl font-bold mb-8 text-purple-600">All Listings</h1>
+        <h1 className="text-3xl font-bold mb-8 text-purple-600">
+          All Listings
+        </h1>
         <div className="mb-6 p-6 bg-white/30 backdrop-blur-md rounded-3xl shadow-lg border border-white/20">
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1">
@@ -156,19 +106,22 @@ export default function ListingsPage() {
             </div>
           </div>
         </div>
+
+        {error && <div className="text-red-500">{error}</div>}
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 text-black">
-          {filtered.map((listing) => (
+          {filtered.map((listing: any) => (
             <div
-              key={listing.id}
+              key={listing._id}
               className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 duration-300 ease-in-out text-black border border-white/20 overflow-hidden hover:bg-white/40 text-black"
             >
               <ListingCard
-                id={listing.id}
+                id={listing._id}
                 title={listing.title}
                 price={listing.price}
                 condition={listing.condition}
                 university={listing.university}
-                imageUrl={listing.imageUrl}
+                imageUrl={listing.imageUrls?.[0] || "/default.png"}
                 category={listing.category}
               />
             </div>

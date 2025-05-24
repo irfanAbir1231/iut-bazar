@@ -9,15 +9,14 @@ const LoginForm = () => {
   // Add useEffect hook to handle token from URL
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get("token");
+    const token = localStorage.getItem("token") || urlParams.get("token");
 
     if (token) {
       // Process the token
       console.log("Received token:", token); // For debugging
 
-
       // Store the token securely in localStorage
-      localStorage.setItem('authToken', token);
+      localStorage.setItem("token", token);
 
       // Remove token from URL for security and cleaner look
       const newUrl = new URL(window.location.origin + window.location.pathname);
@@ -44,7 +43,7 @@ const LoginForm = () => {
       }
       // Store token in localStorage for persistent login
       if (data.token) {
-        localStorage.setItem('authToken', data.token);
+        localStorage.setItem("token", data.token);
       }
       alert("Login successful!");
       window.location.href = "/";
