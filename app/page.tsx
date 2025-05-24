@@ -678,6 +678,26 @@ export default function EnhancedStudMarket() {
     return () => document.removeEventListener("mousedown", handleClick);
   }, [sidebarOpen]);
 
+  useEffect(() => {
+    // Check for token in URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get("token");
+    if (token) {
+      // Fetch user info from backend
+      fetch("http://localhost:5000/api/auth/me", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then((res) => res.json())
+        .then((userData) => {
+          localStorage.setItem("user", JSON.stringify(userData));
+          setUser(userData);
+          // Remove token from URL
+          const newUrl = window.location.origin + window.location.pathname;
+          window.history.replaceState({}, document.title, newUrl);
+        });
+    }
+  }, []);
+
   const Hamburger = () =>
     !sidebarOpen ? (
       <button
@@ -722,12 +742,20 @@ export default function EnhancedStudMarket() {
           />
         </button>
       ) : (
-        <button
-          className="px-5 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-full shadow hover:from-blue-600 hover:to-purple-700 transition"
-          onClick={() => (window.location.href = "/register")}
-        >
-          Login / Register
-        </button>
+        <div className="flex gap-2">
+          <button
+            className="px-5 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-full shadow hover:from-blue-600 hover:to-purple-700 transition"
+            onClick={() => (window.location.href = "/auth/signin")}
+          >
+            Login
+          </button>
+          <button
+            className="px-5 py-2 bg-gradient-to-r from-purple-500 to-blue-500 text-white font-semibold rounded-full shadow hover:from-purple-600 hover:to-blue-700 transition"
+            onClick={() => (window.location.href = "/register")}
+          >
+            Register
+          </button>
+        </div>
       )}
     </div>
   );
