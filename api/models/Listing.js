@@ -3,6 +3,12 @@ import mongoose from "mongoose";
 
 const { Schema } = mongoose;
 
+const bidSchema = new mongoose.Schema({
+  user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  amount: Number,
+  timestamp: Date,
+});
+
 const listingSchema = new Schema(
   {
     title: {
@@ -31,10 +37,12 @@ const listingSchema = new Schema(
       required: true,
       min: 0,
     },
-    biddingDeadline: {
-      type: Date,
-      default: null,
+    biddingEndTime: Date,
+    highestBid: {
+      user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+      amount: Number,
     },
+    bids: [bidSchema],
     condition: {
       type: String,
       enum: ["new", "like new", "good", "fair", "poor"],
@@ -68,13 +76,8 @@ const listingSchema = new Schema(
       enum: ["pending", "approved", "rejected"],
       default: "pending",
     },
-    bids: [
-      {
-        user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-        amount: { type: Number, required: true },
-        time: { type: Date, default: Date.now },
-      },
-    ],
+    confirmed: { type: Boolean, default: false },
+    confirmationDeadline: Date,
   },
   {
     timestamps: true,
