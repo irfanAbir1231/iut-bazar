@@ -1,3 +1,4 @@
+import dynamic from "next/dynamic";
 import {
   MapContainer,
   TileLayer,
@@ -65,4 +66,4 @@ const CampusMap = () => {
   );
 };
 
-export default CampusMap;
+export default dynamic(() => Promise.resolve(CampusMap), { ssr: false });

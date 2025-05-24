@@ -48,7 +48,7 @@ const ListingForm = () => {
   };
 
   return (
-    <div className="max-w-lg mx-auto p-6 bg-white rounded-md mt-10">
+    <div className="max-w-lg mx-auto p-6 bg-white dark:bg-zinc-900 rounded-md mt-10 shadow-lg border border-zinc-200 dark:border-zinc-700">
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <select
           value={type}
@@ -119,6 +119,13 @@ const ListingForm = () => {
   );
 };
 
-export default function Page() {
-  return <ListingForm />;
+export default function NewListingPage() {
+  return (
+    <div className="max-w-2xl mx-auto p-6">
+      <h1 className="text-3xl font-bold mb-6 text-gray-900">
+        Create New Listing
+      </h1>
+      <ListingForm />
+    </div>
+  );
 }
