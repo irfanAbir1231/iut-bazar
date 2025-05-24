@@ -109,6 +109,7 @@ export default function MeetupPage() {
         setTimerActive(true);
       }
       setBidAmount("");
+      
       return newBid;
     });
   };
