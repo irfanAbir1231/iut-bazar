@@ -5,8 +5,6 @@ import {
   Search,
   Plus,
   User,
-  BookOpen,
-  Bike,
   GraduationCap,
   MapPin,
   MessageCircle,
@@ -37,11 +35,6 @@ import {
   Home,
   Shirt,
   Coffee,
-  Phone,
-  Headphones,
-  Camera,
-  Watch,
-  Gamepad2,
 } from "lucide-react";
 
 // Types
