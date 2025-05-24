@@ -15,7 +15,7 @@ const demoListing = {
   seller: "Ahmed Hassan",
 };
 
-export default function ItemDetailsPage() {
+export default function MeetupPage() {
   const [chatOpen, setChatOpen] = useState(false);
   interface Message {
     text: string;
@@ -170,6 +170,9 @@ export default function ItemDetailsPage() {
           </div>
         </div>
       )}
+      <div>
+        Meetup page content here.
+      </div>
     </div>
   );
 }
