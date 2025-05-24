@@ -37,6 +37,7 @@ import {
   Coffee,
 } from "lucide-react";
 import Sidebar from "./components/Sidebar";
+import { SignInButton, SignUpButton, UserButton, useUser } from "@clerk/nextjs";
 
 // Types
 type Listing = {
@@ -780,38 +781,36 @@ export default function EnhancedStudMarket() {
     }
   };
 
-  // Top right button/avatar
-  const TopRightUser = () => (
-    <div className="fixed top-4 right-6 z-[100]">
-      {user ? (
-        <button
-          className="flex items-center gap-2 bg-white/80 hover:bg-white rounded-full px-3 py-1 shadow transition"
-          onClick={() => (window.location.href = "/profile")}
-        >
-          <img
-            src={user.avatar}
-            alt="avatar"
-            className="w-8 h-8 rounded-full object-cover border"
-          />
-        </button>
-      ) : (
-        <div className="flex gap-2">
-          <button
-            className="px-5 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-full shadow hover:from-blue-600 hover:to-purple-700 transition"
-            onClick={() => (window.location.href = "/auth/signin")}
-          >
-            Login
-          </button>
-          <button
-            className="px-5 py-2 bg-gradient-to-r from-purple-500 to-blue-500 text-white font-semibold rounded-full shadow hover:from-purple-600 hover:to-blue-700 transition"
-            onClick={() => (window.location.href = "/register")}
-          >
-            Register
-          </button>
-        </div>
-      )}
-    </div>
-  );
+  // Top right button/avatar with Clerk authentication
+
+  const TopRightUser = () => {
+    const { user } = useUser();
+
+    return (
+      <div className="fixed top-4 right-6 z-[100]">
+        {user ? (
+          <UserButton afterSignOutUrl="/" />
+        ) : (
+          <div className="flex gap-2">
+            <SignInButton mode="modal">
+              <button
+                className="px-5 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-full shadow hover:from-blue-600 hover:to-purple-700 transition"
+              >
+                Login
+              </button>
+            </SignInButton>
+            <SignUpButton mode="modal">
+              <button
+                className="px-5 py-2 bg-gradient-to-r from-purple-500 to-blue-500 text-white font-semibold rounded-full shadow hover:from-purple-600 hover:to-blue-700 transition"
+              >
+                Register
+              </button>
+            </SignUpButton>
+          </div>
+        )}
+      </div>
+    );
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
