@@ -1,0 +1,10 @@
+
+now this will be the chat inderface for the buyers who want to buy items
+
+but the sellers pov would be different, the seller will see the list of the people who messaged him at first, then, after clicking to a certain user, thee same chat wiill be shown but from the sellers pov
+
+the chat box will be tthe same just the addtiional front chat page of the list of users wiht their chats
+
+the items which a user has posted will see the list of users who have messaged them, and they can click on a user to see the chat with that user.
+add this to a route /item-details/seller where the details of the itemms will be shown, the items which the seller posted
+and in there the chat box will be there 
