@@ -36,6 +36,7 @@ import {
   Shirt,
   Coffee,
 } from "lucide-react";
+import Sidebar from "./components/Sidebar";
 
 // Types
 type Listing = {
@@ -639,10 +640,66 @@ const FloatingChatButton = () => {
   );
 };
 
+// Demo user state (replace with real auth logic)
+const DEMO_USER = {
+  name: "Fatima Khan",
+  avatar: "https://randomuser.me/api/portraits/women/44.jpg",
+};
+
 // Main Component
 export default function EnhancedStudMarket() {
   const [searchQuery, setSearchQuery] = useState("");
   const [listings] = useState<Listing[]>(mockListings);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  // Simulate user state
+  const [user, setUser] = useState(() => {
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem("user");
+      return stored ? JSON.parse(stored) : null;
+    }
+    return null;
+  });
+
+  // Save user to localStorage
+  useEffect(() => {
+    if (user) localStorage.setItem("user", JSON.stringify(user));
+    else localStorage.removeItem("user");
+  }, [user]);
+
+  useEffect(() => {
+    if (!sidebarOpen) return;
+    const handleClick = (e: MouseEvent) => {
+      const sidebar = document.querySelector("aside");
+      if (sidebar && !sidebar.contains(e.target as Node)) {
+        setSidebarOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [sidebarOpen]);
+
+  const Hamburger = () =>
+    !sidebarOpen ? (
+      <button
+        aria-label="Open sidebar"
+        onClick={() => setSidebarOpen(true)}
+        className="fixed top-4 left-4 z-[100] bg-[#18214a] hover:bg-[#10162e] text-white p-6 rounded-2xl shadow-lg transition-all"
+        style={{ boxShadow: "0 4px 24px 0 rgba(0,0,0,0.12)" }}
+      >
+        <svg
+          width="40"
+          height="40"
+          viewBox="0 0 40 40"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <rect width="40" height="40" rx="16" fill="none" />
+          <rect x="10" y="14" width="20" height="2.5" rx="1.25" fill="white" />
+          <rect x="10" y="19" width="20" height="2.5" rx="1.25" fill="white" />
+          <rect x="10" y="24" width="20" height="2.5" rx="1.25" fill="white" />
+        </svg>
+      </button>
+    ) : null;
 
   const handleSearch = () => {
     if (searchQuery.trim()) {
@@ -650,8 +707,41 @@ export default function EnhancedStudMarket() {
     }
   };
 
+  // Top right button/avatar
+  const TopRightUser = () => (
+    <div className="fixed top-4 right-6 z-[100]">
+      {user ? (
+        <button
+          className="flex items-center gap-2 bg-white/80 hover:bg-white rounded-full px-3 py-1 shadow transition"
+          onClick={() => (window.location.href = "/profile")}
+        >
+          <img
+            src={user.avatar}
+            alt="avatar"
+            className="w-8 h-8 rounded-full object-cover border"
+          />
+        </button>
+      ) : (
+        <button
+          className="px-5 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-full shadow hover:from-blue-600 hover:to-purple-700 transition"
+          onClick={() => (window.location.href = "/register")}
+        >
+          Login / Register
+        </button>
+      )}
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-gray-50">
+      <Sidebar
+        open={sidebarOpen}
+        toggleOpen={() => setSidebarOpen((v) => !v)}
+        forceOpen={sidebarOpen}
+        user={user}
+      />
+      <Hamburger />
+      <TopRightUser />
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-800">
         {/* Animated Background */}

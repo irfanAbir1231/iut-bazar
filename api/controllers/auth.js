@@ -1,9 +1,77 @@
 import User from "../models/User.js";
 import jwt from "jsonwebtoken";
 import sendEmail from "../utils/sendEmail.js";
+import passport from "passport";
+import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 
 const generateToken = (userId) => {
   return jwt.sign({ id: userId }, process.env.JWT_SECRET, { expiresIn: "7d" });
+};
+
+// Configure Passport Google Strategy
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: process.env.GOOGLE_CLIENT_ID, // Your Google Client ID
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET, // Your Google Client Secret
+      callbackURL: process.env.GOOGLE_CALLBACK_URL, // e.g., "http://localhost:5000/api/auth/google/callback"
+    },
+    async (accessToken, refreshToken, profile, cb) => {
+      try {
+        // Find or create user in your database
+        let user = await User.findOne({ googleId: profile.id });
+
+        if (!user) {
+          // Create new user if not found
+          user = await User.create({
+            googleId: profile.id,
+            name: profile.displayName,
+            email: profile.emails[0].value, // Assuming email is available and verified
+            // You might want to set a default password or handle it differently for OAuth users
+            // password: defaultPassword or generateRandomPassword()
+          });
+        }
+        // Pass the user object to the next step (serialization or callback handler)
+        return cb(null, user);
+      } catch (error) {
+        return cb(error, null);
+      }
+    }
+  )
+);
+
+// Passport serialization/deserialization (optional for stateless APIs, but good practice with Passport)
+// passport.serializeUser((user, done) => {
+//   done(null, user.id);
+// });
+
+// passport.deserializeUser(async (id, done) => {
+//   try {
+//     const user = await User.findById(id);
+//     done(null, user);
+//   } catch (error) {
+//     done(error, null);
+//   }
+// });
+
+// Controller function to handle Google OAuth callback success
+export const googleAuthCallback = (req, res) => {
+  // Passport adds the authenticated user to req.user
+  const user = req.user;
+
+  if (user) {
+    // Generate your application's token
+    const appToken = generateToken(user._id);
+
+    // Redirect to the frontend with the token
+    // Make sure process.env.CLIENT_URL is set to your frontend URL (e.g., http://localhost:3001)
+    res.redirect(`${process.env.CLIENT_URL}/auth/signin?token=${appToken}`);
+  } else {
+    // Handle authentication failure (e.g., redirect to login with an error message)
+    res.redirect(
+      `${process.env.CLIENT_URL}/auth/signin?error=google_auth_failed`
+    );
+  }
 };
 
 // @route   POST /api/auth/register
@@ -22,7 +90,7 @@ export const register = async (req, res) => {
       token: generateToken(user._id),
     });
   } catch (err) {
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: err.message || "Server error" });
   }
 };
 
