@@ -22,6 +22,17 @@ const listingSchema = new Schema(
       required: true,
       maxlength: 2000,
     },
+    location: {
+      type: String,
+      required: true,
+      trim: true,
+      maxlength: 200,
+    },
+    usedTime: {
+      type: Number,
+      required: true,
+    },
+
     type: {
       type: String,
       enum: ["item", "service"],
@@ -32,7 +43,7 @@ const listingSchema = new Schema(
       enum: ["fixed", "bidding", "hourly"],
       required: true,
     },
-    price: {
+    actualPrice: {
       type: Number,
       required: true,
       min: 0,

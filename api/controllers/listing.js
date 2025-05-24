@@ -10,6 +10,8 @@ export const createListing = async (req, res, next) => {
       description,
       type,
       price,
+      location,
+      usedTime,
       pricingMode,
       visibility,
       category,
@@ -32,6 +34,8 @@ export const createListing = async (req, res, next) => {
       type,
       price,
       pricingMode,
+      location,
+      usedTime,
       visibility,
       category,
       biddingEndTime:
