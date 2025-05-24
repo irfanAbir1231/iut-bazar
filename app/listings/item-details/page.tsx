@@ -77,8 +77,8 @@ export default function MeetupPage() {
           />
           <div className="flex-1 flex flex-col justify-between">
             <div>
-              <h1 className="text-3xl font-bold mb-2">{demoListing.title}</h1>
-              <div className="text-xl text-blue-600 font-semibold mb-2">৳{demoListing.price.toLocaleString()}</div>
+              <h1 className="text-3xl font-bold mb-2 text-purple-600 ">{demoListing.title}</h1>
+              <div className="text-xl text-black font-semibold mb-2">৳{demoListing.price.toLocaleString()}</div>
               <div className="text-gray-600 mb-1">Condition: {demoListing.condition}</div>
               <div className="text-gray-600 mb-1">University: {demoListing.university}</div>
               <div className="text-gray-600 mb-1">Seller: {demoListing.seller}</div>
@@ -136,7 +136,7 @@ export default function MeetupPage() {
                     onChange={handleFile}
                   />
                   <span className="p-2 bg-gray-100 rounded-full hover:bg-gray-200 transition-all">
-                    <ImageIcon size={20} />
+                    <ImageIcon size={20} className="text-black" color="black" />
                   </span>
                 </label>
                 {image && (
@@ -153,7 +153,7 @@ export default function MeetupPage() {
                 <input
                   type="text"
                   placeholder="Type your message..."
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black placeholder-black"
                   value={input}
                   onChange={e => setInput(e.target.value)}
                   onKeyDown={e => { if (e.key === "Enter") handleSend(); }}
