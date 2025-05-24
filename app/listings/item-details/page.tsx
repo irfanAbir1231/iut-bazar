@@ -77,12 +77,12 @@ export default function MeetupPage() {
           />
           <div className="flex-1 flex flex-col justify-between">
             <div>
-              <h1 className="text-3xl font-bold mb-2 text-purple-600 ">{demoListing.title}</h1>
+              <h1 className="text-3xl font-bold mb-2 text-black">{demoListing.title}</h1>
               <div className="text-xl text-black font-semibold mb-2">৳{demoListing.price.toLocaleString()}</div>
-              <div className="text-gray-600 mb-1">Condition: {demoListing.condition}</div>
-              <div className="text-gray-600 mb-1">University: {demoListing.university}</div>
-              <div className="text-gray-600 mb-1">Seller: {demoListing.seller}</div>
-              <div className="text-gray-600 mb-1">Category: {demoListing.category}</div>
+              <div className="text-black mb-1">Condition: {demoListing.condition}</div>
+              <div className="text-black mb-1">University: {demoListing.university}</div>
+              <div className="text-black mb-1">Seller: {demoListing.seller}</div>
+              <div className="text-black mb-1">Category: {demoListing.category}</div>
             </div>
             <button
               className="mt-6 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold rounded-lg flex items-center gap-2 shadow-lg hover:from-blue-600 hover:to-purple-700 transition-all"
@@ -106,8 +106,8 @@ export default function MeetupPage() {
               <X size={24} />
             </button>
             <div className="p-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-purple-50 rounded-t-2xl">
-              <h3 className="font-semibold text-gray-900">Chat with {demoListing.seller}</h3>
-              <p className="text-xs text-gray-600">Product: {demoListing.title}</p>
+              <h3 className="font-semibold text-black">Chat with {demoListing.seller}</h3>
+              <p className="text-xs text-black">Product: {demoListing.title}</p>
             </div>
             <div ref={chatRef} className="p-4 space-y-3 max-h-96 overflow-y-auto flex-1 bg-gradient-to-br from-gray-50 to-white">
               {messages.map((msg, idx) => (
@@ -116,7 +116,7 @@ export default function MeetupPage() {
                   className={`rounded-lg p-3 text-sm max-w-[80%] break-words ${
                     msg.sender === "me"
                       ? "bg-blue-500 text-white ml-auto shadow-md"
-                      : "bg-gray-100 text-gray-900 mr-auto shadow"
+                      : "bg-gray-100 text-black mr-auto shadow"
                   }`}
                 >
                   {msg.text && <div>{msg.text}</div>}

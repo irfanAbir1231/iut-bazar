@@ -52,6 +52,12 @@ export default function Sidebar({
             >
               All Products
             </Link>
+            <Link
+              href="/listings/my-listings"
+              className="sidebar-link flex items-center gap-2 px-3 py-2 rounded-md hover:bg-white/20 transition-colors"
+            >
+              My Products/Services
+            </Link>
           </nav>
         </div>
         <div className="flex flex-col gap-2 px-4 pb-6">

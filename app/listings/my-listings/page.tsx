@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import ListingCard from "../components/ListingCard";
+import Link from "next/link";
 
 const demoListings = [
   // Items
@@ -94,12 +94,12 @@ const SearchBar = ({
     type="text"
     value={query}
     onChange={(e) => setQuery(e.target.value)}
-    className="w-full p-3 border rounded-xl text-black bg-white/30 backdrop-blur-md focus:ring-2 focus:ring-blue-500 transition-all duration-300 ease-in-out border-gray-200/50 hover:border-blue-300/50 placeholder-black"
-    placeholder="Search listings..."
+    className="w-full p-3 border rounded-xl text-gray-900 bg-white/30 backdrop-blur-md focus:ring-2 focus:ring-blue-500 transition-all duration-300 ease-in-out border-gray-200/50 hover:border-blue-300/50"
+    placeholder="Search my listings..."
   />
 );
 
-export default function ListingsPage() {
+export default function MyListingsPage() {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("All");
   const [condition, setCondition] = useState("All");
@@ -117,9 +117,9 @@ export default function ListingsPage() {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50 py-10 flex flex-col items-center">
-      <div className="max-w-6xl w-full bg-white rounded-2xl shadow-xl p-8 mb-8">
-        <h1 className="text-3xl font-bold mb-8 text-purple-600">All Listings</h1>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 py-10">
+      <div className="max-w-6xl mx-auto p-6">
+        <h1 className="text-3xl font-bold mb-8 text-gray-900">My Listings</h1>
         <div className="mb-6 p-6 bg-white/30 backdrop-blur-md rounded-3xl shadow-lg border border-white/20">
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1">
@@ -129,7 +129,7 @@ export default function ListingsPage() {
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full sm:w-auto p-3 border rounded-xl bg-white/30 backdrop-blur-md text-black focus:ring-2 focus:ring-blue-500 transition-all duration-300 ease-in-out border-gray-200/50 hover:border-blue-300/50"
+                className="w-full sm:w-auto p-3 border rounded-xl bg-white/30 backdrop-blur-md text-gray-900 focus:ring-2 focus:ring-blue-500 transition-all duration-300 ease-in-out border-gray-200/50 hover:border-blue-300/50"
               >
                 {categories.map((c) => (
                   <option key={c}>{c}</option>
@@ -138,7 +138,7 @@ export default function ListingsPage() {
               <select
                 value={condition}
                 onChange={(e) => setCondition(e.target.value)}
-                className="w-full sm:w-auto p-3 border rounded-xl bg-white/30 backdrop-blur-md text-black focus:ring-2 focus:ring-blue-500 transition-all duration-300 ease-in-out border-gray-200/50 hover:border-blue-300/50"
+                className="w-full sm:w-auto p-3 border rounded-xl bg-white/30 backdrop-blur-md text-gray-900 focus:ring-2 focus:ring-blue-500 transition-all duration-300 ease-in-out border-gray-200/50 hover:border-blue-300/50"
               >
                 {conditions.map((c) => (
                   <option key={c}>{c}</option>
@@ -147,7 +147,7 @@ export default function ListingsPage() {
               <select
                 value={university}
                 onChange={(e) => setUniversity(e.target.value)}
-                className="w-full sm:w-auto p-3 border rounded-xl bg-white/30 backdrop-blur-md text-black focus:ring-2 focus:ring-blue-500 transition-all duration-300 ease-in-out border-gray-200/50 hover:border-blue-300/50"
+                className="w-full sm:w-auto p-3 border rounded-xl bg-white/30 backdrop-blur-md text-gray-900 focus:ring-2 focus:ring-blue-500 transition-all duration-300 ease-in-out border-gray-200/50 hover:border-blue-300/50"
               >
                 {universities.map((u) => (
                   <option key={u}>{u}</option>
@@ -156,13 +156,13 @@ export default function ListingsPage() {
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 text-black">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filtered.map((listing) => (
             <div
               key={listing.id}
-              className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 duration-300 ease-in-out text-black border border-white/20 overflow-hidden hover:bg-white/40 text-black"
+              className="bg-white/30 backdrop-blur-md rounded-3xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 duration-300 ease-in-out text-gray-900 border border-white/20 overflow-hidden hover:bg-white/40"
             >
-              <ListingCard
+              <SellerListingCard
                 id={listing.id}
                 title={listing.title}
                 price={listing.price}
@@ -178,3 +178,32 @@ export default function ListingsPage() {
     </div>
   );
 }
+
+// SellerListingCard is like ListingCard but links to /listings/item-details/seller
+function SellerListingCard({ id, title, price, condition, university, imageUrl, category }: any) {
+  return (
+    <div className="bg-white rounded-md shadow p-4 flex flex-col gap-2">
+      {imageUrl && (
+        <img
+          src={imageUrl}
+          alt={title}
+          className="w-full h-40 object-cover rounded mb-2"
+        />
+      )}
+      <Link href="/listings/item-details/seller" passHref legacyBehavior>
+        <a className="font-bold text-lg text-blue-700 hover:underline cursor-pointer">
+          {title}
+        </a>
+      </Link>
+      <div className="text-blue-600 font-semibold">৳{price}</div>
+      <div className="text-sm text-gray-600">Condition: {condition}</div>
+      <div className="text-xs text-gray-400">{university}</div>
+      <div className="text-xs text-gray-500">Category: {category}</div>
+      <Link href="/listings/item-details/seller" passHref legacyBehavior>
+        <a className="mt-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all text-center block">
+          View Details
+        </a>
+      </Link>
+    </div>
+  );
+} 
