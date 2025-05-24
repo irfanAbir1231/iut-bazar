@@ -1,0 +1,5 @@
+So in the hoke page there is chat options
+i have created the  grokapi chatting in the /groq-chat/page.tsx
+and the backkend in the /api/groq-chat/route.ts
+
+I want too implement the groq chat in the home page'  chat option, please do that

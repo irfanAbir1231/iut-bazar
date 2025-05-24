@@ -583,6 +583,52 @@ const CategoriesGrid = () => {
 // Floating Action Button
 const FloatingChatButton = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [messages, setMessages] = useState([
+    { role: "system", content: "You are a helpful assistant." },
+  ]);
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const chatRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (chatRef.current) {
+      chatRef.current.scrollTop = chatRef.current.scrollHeight;
+    }
+  }, [messages, isOpen]);
+
+  const handleSend = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (!input.trim()) return;
+    setLoading(true);
+    setError("");
+    const newMessages = [
+      ...messages,
+      { role: "user", content: input },
+    ];
+    setMessages(newMessages);
+    setInput("");
+    try {
+      const res = await fetch("/api/groq-chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: newMessages }),
+      });
+      const data = await res.json();
+      if (res.ok && data.choices && data.choices[0]?.message?.content) {
+        setMessages([
+          ...newMessages,
+          { role: "assistant", content: data.choices[0].message.content },
+        ]);
+      } else {
+        setError(data.error || "Failed to get response");
+      }
+    } catch {
+      setError("Failed to connect to Groq API");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="fixed bottom-6 right-6 z-40">
@@ -607,33 +653,40 @@ const FloatingChatButton = () => {
             </h3>
             <p className="text-sm text-gray-600">How can I help you today?</p>
           </div>
-          <div className="p-4 space-y-3 max-h-96 overflow-y-auto">
-            <div className="bg-gray-100 rounded-lg p-3">
-              <p className="text-sm">
-                Hello! I'm here to help you find the best deals on campus.
-              </p>
-            </div>
-            <div className="bg-blue-500 text-white rounded-lg p-3 ml-8">
-              <p className="text-sm">Looking for textbooks for CSE courses</p>
-            </div>
-            <div className="bg-gray-100 rounded-lg p-3">
-              <p className="text-sm">
-                I found 15 CSE textbooks available. Would you like to see them?
-              </p>
-            </div>
+          <div ref={chatRef} className="p-4 space-y-3 max-h-96 overflow-y-auto bg-gray-50">
+            {messages
+              .filter((m) => m.role !== "system")
+              .map((m, i) => (
+                <div
+                  key={i}
+                  className={`mb-2 p-2 rounded text-sm ${
+                    m.role === "user"
+                      ? "bg-blue-100 text-right ml-10"
+                      : "bg-green-100 text-left mr-10"
+                  }`}
+                >
+                  <span className="block whitespace-pre-line">{m.content}</span>
+                </div>
+              ))}
           </div>
-          <div className="p-4 border-t border-gray-200">
-            <div className="flex gap-2">
-              <input
-                type="text"
-                placeholder="Type your message..."
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              <button className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
-                Send
-              </button>
-            </div>
-          </div>
+          <form onSubmit={handleSend} className="p-4 border-t border-gray-200 flex gap-2">
+            <input
+              type="text"
+              placeholder="Type your message..."
+              className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              disabled={loading}
+            />
+            <button
+              type="submit"
+              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+              disabled={loading || !input.trim()}
+            >
+              {loading ? "..." : "Send"}
+            </button>
+          </form>
+          {error && <div className="text-red-500 px-4 pb-2">{error}</div>}
         </div>
       )}
     </div>
