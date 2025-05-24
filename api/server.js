@@ -13,6 +13,7 @@ import router from "./routes/googleAuth.js";
 // import upload from "./routes/upload.js";
 import user from "./routes/userRouter.js";
 import listing from "./routes/listingRouter.js";
+import bidding from "./routes/biddingRouter.js";
 
 const app = express();
 
@@ -39,6 +40,7 @@ app.use("/api/auth", router);
 // app.use("/api", upload);
 app.use("/api/users", user);
 app.use("/api/listings", listing);
+app.use("/api/bidding", bidding);
 
 const connectDB = async () => {
   try {

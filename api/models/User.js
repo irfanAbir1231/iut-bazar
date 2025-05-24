@@ -17,6 +17,10 @@ const userSchema = new mongoose.Schema(
     department: String,
     program: String,
     year: String,
+    credits: {
+      type: Number,
+      default: 1000,
+    },
     phone: String,
     dob: Date,
     isAdmin: { type: Boolean, default: false },
