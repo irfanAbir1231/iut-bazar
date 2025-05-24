@@ -14,6 +14,7 @@ export const createListing = async (req, res, next) => {
       usedTime,
       pricingMode,
       visibility,
+      condition,
       category,
       university,
     } = req.body;
@@ -37,6 +38,7 @@ export const createListing = async (req, res, next) => {
       location,
       usedTime,
       visibility,
+      condition,
       category,
       biddingEndTime:
         pricingMode === "bidding"
@@ -60,17 +62,47 @@ export const createListing = async (req, res, next) => {
 // GET /api/listings
 export const getAllApprovedListings = async (req, res, next) => {
   try {
+    const {
+      university,
+      category,
+      condition,
+      minPrice,
+      maxPrice,
+      type,
+      pricingMode,
+      q, // keyword search
+    } = req.query;
+
     const filters = {
       status: "approved",
-      ...(req.query.university && { university: req.query.university }),
-      ...(req.query.category && { category: req.query.category }),
-      ...(req.query.condition && { condition: req.query.condition }),
     };
+
+    if (university) filters.university = university;
+    if (category) filters.category = category;
+    if (condition) filters.condition = condition;
+    if (type) filters.type = type;
+    if (pricingMode) filters.pricingMode = pricingMode;
+
+    // Price range filter
+    if (minPrice || maxPrice) {
+      filters.price = {};
+      if (minPrice) filters.price.$gte = Number(minPrice);
+      if (maxPrice) filters.price.$lte = Number(maxPrice);
+    }
+
+    // Keyword search on title & description
+    if (q) {
+      filters.$or = [
+        { title: { $regex: q, $options: "i" } },
+        { description: { $regex: q, $options: "i" } },
+      ];
+    }
 
     const listings = await Listing.find(filters).populate(
       "owner",
       "name university"
     );
+
     res.json(listings);
   } catch (err) {
     next(err);
