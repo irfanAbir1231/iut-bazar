@@ -13,9 +13,7 @@ export const createListing = async (req, res, next) => {
       pricingMode,
       visibility,
       category,
-      condition,
       university,
-      biddingDeadline,
     } = req.body;
 
     let imageUrls = [];
@@ -36,8 +34,10 @@ export const createListing = async (req, res, next) => {
       pricingMode,
       visibility,
       category,
-      condition,
-      biddingDeadline,
+      biddingEndTime:
+        pricingMode === "bidding"
+          ? new Date(Date.now() + 5 * 60 * 1000).toISOString()
+          : null,
       owner: req.user._id,
       university,
       status: "pending",
