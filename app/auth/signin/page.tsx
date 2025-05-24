@@ -1,62 +1,63 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-const allowedDomains = ["@iut-dhaka.edu", "@du.ac.bd", "@bracu.ac.bd"]; // add more as needed
-
-const RegisterForm = () => {
+const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [university, setUniversity] = useState("");
-  const [department, setDepartment] = useState("");
-  const [program, setProgram] = useState("");
-  const [year, setYear] = useState("");
   const [error, setError] = useState("");
-  const [name, setName] = useState("");
 
-  const validateEmail = (email: string) =>
-    allowedDomains.some((domain) => email.endsWith(domain));
+  // Add useEffect hook to handle token from URL
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get("token");
+
+    if (token) {
+      // Process the token
+      console.log("Received token:", token); // For debugging
+
+      // TODO: Store the token securely (e.g., in localStorage or context)
+      // localStorage.setItem('authToken', token);
+
+      // Remove token from URL for security and cleaner look
+      const newUrl = new URL(window.location.origin + window.location.pathname);
+      window.history.replaceState({}, document.title, newUrl.toString());
+
+      // Redirect user to the main page
+      window.location.href = "/"; // Redirect to home page
+    }
+  }, []); // Empty dependency array means this runs once on mount
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validateEmail(email)) {
-      setError("Please use a valid university email");
-      return;
-    }
     setError("");
     try {
-      const res = await fetch("http://localhost:5000/api/auth/register", {
+      const res = await fetch("http://localhost:5000/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({ email, password }),
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.message || "Registration failed");
+        setError(data.message || "Login failed");
         return;
       }
-      alert("Registration successful!");
+      // Store token or user info as needed
+      alert("Login successful!");
+      // window.location.href = "/"; // redirect if needed
     } catch (err: any) {
-      setError(err?.message || "Registration failed");
+      setError(err?.message || "Login failed");
     }
   };
 
   return (
     <div className="max-w-md mx-auto p-6 bg-white rounded-md shadow-md mt-10">
       <h2 className="text-2xl font-bold text-gray-900 mb-2 text-center">
-        Register
+        Login
       </h2>
       <p className="text-gray-600 mb-6 text-center">
-        Create your account to start trading on StudMarket
+        Sign in to your StudMarket account
       </p>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="w-full p-2 border rounded bg-gray-50 text-gray-900 placeholder-gray-500"
-          placeholder="Full Name"
-          required
-        />
         <input
           type="email"
           value={email}
@@ -73,40 +74,12 @@ const RegisterForm = () => {
           placeholder="Password"
           required
         />
-        <input
-          type="text"
-          value={university}
-          onChange={(e) => setUniversity(e.target.value)}
-          className="w-full p-2 border rounded bg-gray-50 text-gray-900 placeholder-gray-500"
-          placeholder="University (optional)"
-        />
-        <input
-          type="text"
-          value={department}
-          onChange={(e) => setDepartment(e.target.value)}
-          className="w-full p-2 border rounded bg-gray-50 text-gray-900 placeholder-gray-500"
-          placeholder="Department (optional)"
-        />
-        <input
-          type="text"
-          value={program}
-          onChange={(e) => setProgram(e.target.value)}
-          className="w-full p-2 border rounded bg-gray-50 text-gray-900 placeholder-gray-500"
-          placeholder="Program (optional)"
-        />
-        <input
-          type="text"
-          value={year}
-          onChange={(e) => setYear(e.target.value)}
-          className="w-full p-2 border rounded bg-gray-50 text-gray-900 placeholder-gray-500"
-          placeholder="Year (optional)"
-        />
         {error && <div className="text-red-500 text-sm">{error}</div>}
         <button
           type="submit"
           className="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
         >
-          Register
+          Login
         </button>
       </form>
       <div className="my-6 flex items-center justify-center">
@@ -155,6 +128,6 @@ const RegisterForm = () => {
   );
 };
 
-export default function Page() {
-  return <RegisterForm />;
+export default function SignInPage() {
+  return <LoginForm />;
 }

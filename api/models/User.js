@@ -7,12 +7,23 @@ const userSchema = new mongoose.Schema(
     email: { type: String, required: true, unique: true },
     password: {
       type: String,
-      // Required only if user signs up via local method (i.e. not Google)
+
       required: function () {
         return !this.googleId;
       },
     },
     googleId: { type: String, unique: true, sparse: true },
+    university: String,
+    department: String,
+    program: String,
+    year: String,
+    credits: {
+      type: Number,
+      default: 1000,
+    },
+    phone: String,
+    dob: Date,
+    isAdmin: { type: Boolean, default: false },
     resetPasswordToken: String,
     resetPasswordExpires: Date,
   },

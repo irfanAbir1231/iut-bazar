@@ -3,6 +3,7 @@ import { useState } from "react";
 import ListingCard from "../components/ListingCard";
 
 const demoListings = [
+  // Items
   {
     id: 1,
     title: "Used Laptop",
@@ -14,21 +15,67 @@ const demoListings = [
   },
   {
     id: 2,
+    title: "Mountain Bike",
+    price: 12000,
+    condition: "Fair",
+    university: "DU",
+    imageUrl: "https://via.placeholder.com/300x160.png?text=Bike",
+    category: "Vehicles",
+  },
+  {
+    id: 3,
+    title: "Desk Chair",
+    price: 2000,
+    condition: "Good",
+    university: "IUT",
+    imageUrl: "https://via.placeholder.com/300x160.png?text=Chair",
+    category: "Furniture",
+  },
+  // Services
+  {
+    id: 4,
     title: "Math Tutoring",
-    price: 500,
+    price: "500/hr",
     condition: "N/A",
     university: "BRACU",
     imageUrl: "https://via.placeholder.com/300x160.png?text=Tutoring",
     category: "Service",
   },
   {
-    id: 3,
-    title: "Bike for Sale",
-    price: 12000,
-    condition: "Fair",
+    id: 5,
+    title: "Laundry Service",
+    price: "150/hr",
+    condition: "N/A",
+    university: "IUT",
+    imageUrl: "https://via.placeholder.com/300x160.png?text=Laundry",
+    category: "Service",
+  },
+  {
+    id: 6,
+    title: "Food Delivery",
+    price: "100/hr",
+    condition: "N/A",
     university: "DU",
-    imageUrl: "https://via.placeholder.com/300x160.png?text=Bike",
-    category: "Vehicles",
+    imageUrl: "https://via.placeholder.com/300x160.png?text=Delivery",
+    category: "Service",
+  },
+  {
+    id: 7,
+    title: "Car Wash",
+    price: "250/hr",
+    condition: "N/A",
+    university: "IUT",
+    imageUrl: "https://via.placeholder.com/300x160.png?text=Car+Wash",
+    category: "Service",
+  },
+  {
+    id: 8,
+    title: "Home Cooking",
+    price: "300/hr",
+    condition: "N/A",
+    university: "BRACU",
+    imageUrl: "https://via.placeholder.com/300x160.png?text=Cooking",
+    category: "Service",
   },
 ];
 

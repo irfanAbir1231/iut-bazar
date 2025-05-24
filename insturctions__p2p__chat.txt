@@ -1,0 +1,8 @@
+-Create the frontend of the  chat system with user to seller 
+-this will appear in the details(Create the details page of the product) of the product page, a button will be there of the emsseages which will open a new window with the chat system\
+-the chat system will have a list of messages between the user and the seller
+-the user can send a message to the seller and the seller can reply to the user
+-they can also send pictures.
+-use the chatbot system from the home pahge, there is already implemented a chatbot system, use that as a reference
+//-the chat system should be responsive and work on mobile devices
+(upper part is done)
