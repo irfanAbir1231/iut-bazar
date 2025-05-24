@@ -28,16 +28,21 @@ const ListingCard: React.FC<ListingCardProps> = ({
         className="w-full h-40 object-cover rounded mb-2"
       />
     )}
-    <Link href="/listings/item-details" passHref legacyBehavior>
+
+    {/* Link for the title */}
+    <Link href={`/item-details/${id}`} legacyBehavior passHref>
       <a className="font-bold text-lg text-blue-700 hover:underline cursor-pointer">
         {title}
       </a>
     </Link>
+
     <div className="text-blue-600 font-semibold">৳{price}</div>
     <div className="text-sm text-gray-600">Condition: {condition}</div>
     <div className="text-xs text-gray-400">{university}</div>
     <div className="text-xs text-gray-500">Category: {category}</div>
-    <Link href="/item-details" passHref legacyBehavior>
+
+    {/* Link for the button */}
+    <Link href={`/item-details/${id}`} legacyBehavior passHref>
       <a className="mt-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all text-center block">
         View Details
       </a>
