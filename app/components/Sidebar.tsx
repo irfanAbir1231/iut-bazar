@@ -25,40 +25,40 @@ export default function Sidebar({ open, toggleOpen, forceOpen }: SidebarProps) {
         </button>
       </div>
       <aside
-        className={`fixed top-0 left-0 h-full w-64 bg-[#15171A] flex flex-col justify-between z-50 transition-transform duration-700 ${
+        className={`fixed top-0 left-0 h-full w-64 bg-white/10 backdrop-blur-lg shadow-2xl flex flex-col justify-between z-50 transition-transform duration-700 ${
           open ? "translate-x-0" : "-translate-x-full"
         }`}
         style={{ pointerEvents: open ? "auto" : "none" }}
       >
         <div>
           <nav className="flex flex-col gap-1 mt-32 px-4">
-            <Link href="/browse" className="sidebar-link">
-              Browse
+            <Link
+              href="/listings/add-item"
+              className="sidebar-link flex items-center gap-2"
+            >
+              <Plus size={16} /> Add Item
             </Link>
-            <Link href="/sell" className="sidebar-link">
-              Sell
+            <Link
+              href="/listings/add-service"
+              className="sidebar-link flex items-center gap-2"
+            >
+              <Sparkles size={16} /> Add Service
             </Link>
-            <Link href="/listings" className="sidebar-link">
-              Listings
-            </Link>
-            <Link href="/profile" className="sidebar-link">
-              Profile
+            <Link
+              href="/listings"
+              className="sidebar-link flex items-center gap-2"
+            >
+              All Products
             </Link>
           </nav>
         </div>
         <div className="flex flex-col gap-2 px-4 pb-6">
-          <button className="sidebar-action">
-            <Plus size={18} /> List Item
-          </button>
-          <button className="sidebar-action">
-            <Bell size={18} />
-          </button>
-          <button className="sidebar-action">
-            <MessageCircle size={18} />
-          </button>
-          <button className="sidebar-action">
+          <Link
+            href="/profile"
+            className="sidebar-action flex items-center gap-2"
+          >
             <User size={18} /> Account
-          </button>
+          </Link>
         </div>
       </aside>
     </>

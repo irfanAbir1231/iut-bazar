@@ -1,0 +1,14 @@
+in the add product page there will be these features
+- title
+-description
+-image
+-location
+-year/(S) of use(1,2,3+)(dropdown)
+-ACTUAL prize
+-suggested prize
+    -if item used <= 1 year then suggested price cant be more than 80% of the original
+    -if used item >1 and <=2 years then suggested price cant be more than 75% of the original
+    -if used item >2 and <=3 years then suggested price cant be more than 60% of the original
+    -if used item >3 years then suggested price cant be more than 50% of the original
+
+if the user give less than the suggested prize he can do that. but he cant give more than that

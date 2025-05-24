@@ -1,0 +1,13 @@
+in the add service page there will be these features
+-title
+-description
+-image
+-location
+-Hours
+-offered service charge (hourly basis)
+-service type (drop down)
+    - vehicle service
+    - tutoring service
+    - laundry service
+    - delivery service
+    - cooking service
