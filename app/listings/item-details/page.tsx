@@ -109,7 +109,6 @@ export default function MeetupPage() {
         setTimerActive(true);
       }
       setBidAmount("");
-      
       return newBid;
     });
   };
@@ -122,25 +121,80 @@ export default function MeetupPage() {
           <Image
             src={demoListing.imageUrl}
             alt={demoListing.title}
-            className="w-full md:w-64 h-48 object-cover rounded-xl border"
+            width={400}
+            height={192}
+            className="w-full md:w-64 h-48 object-cover rounded-xl border mb-4"
+            style={{ objectFit: "cover" }}
+            priority
           />
-          <div className="flex-1 flex flex-col justify-between">
-            <div>
-              <h1 className="text-3xl font-bold mb-2 text-black">{demoListing.title}</h1>
-              <div className="text-xl text-black font-semibold mb-2">৳{demoListing.price.toLocaleString()}</div>
-              <div className="text-black mb-1">Condition: {demoListing.condition}</div>
-              <div className="text-black mb-1">University: {demoListing.university}</div>
-              <div className="text-black mb-1">Seller: {demoListing.seller}</div>
-              <div className="text-black mb-1">Category: {demoListing.category}</div>
-            </div>
-            <button
-              className="mt-6 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold rounded-lg flex items-center gap-2 shadow-lg hover:from-blue-600 hover:to-purple-700 transition-all"
-              onClick={() => setChatOpen(true)}
-            >
-              <MessageCircle size={20} />
-              Message Seller
-            </button>
+          <h1 className="text-3xl font-bold mb-2">{demoListing.title}</h1>
+          <div className="text-gray-700 mb-2">{demoListing.description}</div>
+          <div className="text-gray-600 mb-1">Location: {demoListing.location}</div>
+          <div className="text-gray-600 mb-1">Year(s) of Use: 
+            <select className="ml-2 border rounded px-2 py-1" value={demoListing.yearOfUse} disabled>
+              <option value={1}>1</option>
+              <option value={2}>2</option>
+              <option value={3}>3</option>
+              <option value={4}>3+</option>
+            </select>
           </div>
+          <div className="text-gray-600 mb-1">Condition: {demoListing.condition}</div>
+          <div className="text-gray-600 mb-1">University: {demoListing.university}</div>
+          <div className="text-gray-600 mb-1">Seller: {demoListing.seller}</div>
+          <div className="text-gray-600 mb-1">Category: {demoListing.category}</div>
+          <div className="text-gray-600 mb-1">Actual Price: <span className="font-semibold">৳{demoListing.price.toLocaleString()}</span></div>
+          <div className="text-gray-600 mb-1">Suggested Price: <span className="font-semibold">৳{demoListing.suggestedPrice.toLocaleString()}</span></div>
+          <button
+            className="mt-6 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold rounded-lg flex items-center gap-2 shadow-lg hover:from-blue-600 hover:to-purple-700 transition-all"
+            onClick={() => setChatOpen(true)}
+          >
+            <MessageCircle size={20} />
+            Message Seller
+          </button>
+        </div>
+        {/* Bidding Section Right */}
+        <div className="w-full md:w-[400px] bg-white rounded-2xl shadow-xl p-8 mb-8 self-start">
+          <h2 className="text-2xl font-bold mb-4 text-purple-700">Bidding</h2>
+          <div className="mb-2 text-gray-700">Current Highest Bid: <span className="font-semibold text-blue-600">{highestBid} credits</span></div>
+          <div className="mb-2 text-gray-700">Suggested Price: <span className="font-semibold">{demoListing.suggestedPrice} credits</span></div>
+          <div className="mb-2 text-gray-700">Your Credits: <span className="font-semibold">{userCredits} credits</span></div>
+          {winner ? (
+            <>
+              <div className="mb-4 text-green-700 font-bold text-xl">SOLD</div>
+              <div className="mb-2 text-gray-800 font-semibold">Winner: <span className="text-blue-700">{winner}</span></div>
+            </>
+          ) : (
+            <>
+              <div className="mb-2 text-gray-700">Minimum Next Bid: <span className="font-semibold">{highestBid + 10} credits</span></div>
+              <div className="flex gap-2 items-center mb-4">
+                <input
+                  type="number"
+                  min={highestBid + 10}
+                  className="border rounded px-3 py-2 flex-1"
+                  placeholder={`Enter bid (min ${highestBid + 10})`}
+                  value={bidAmount}
+                  onChange={e => setBidAmount(e.target.value === "" ? "" : Number(e.target.value))}
+                  disabled={userCredits < 10 || timer === 0}
+                />
+                <button
+                  className="px-5 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-all"
+                  onClick={handleBid}
+                  disabled={userCredits < 10 || timer === 0}
+                >
+                  Place Bid
+                </button>
+              </div>
+              {timerActive && (
+                <div className="mb-2 text-red-600 font-semibold">Time left: {timer}s</div>
+              )}
+              {bidStatus && (
+                <div className="mb-2 text-purple-700 font-semibold">{bidStatus}</div>
+              )}
+              <div className="text-xs text-gray-500 mt-2">
+                * You must have at least 10 credits to bid. First bid starts a 1-minute timer. If timer ends, highest bidder wins. If outbid, your credits are refunded.
+              </div>
+            </>
+          )}
         </div>
       </div>
 
@@ -155,8 +209,8 @@ export default function MeetupPage() {
               <X size={24} />
             </button>
             <div className="p-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-purple-50 rounded-t-2xl">
-              <h3 className="font-semibold text-black">Chat with {demoListing.seller}</h3>
-              <p className="text-xs text-black">Product: {demoListing.title}</p>
+              <h3 className="font-semibold text-gray-900">Chat with {demoListing.seller}</h3>
+              <p className="text-xs text-gray-600">Product: {demoListing.title}</p>
             </div>
             <div ref={chatRef} className="p-4 space-y-3 max-h-96 overflow-y-auto flex-1 bg-gradient-to-br from-gray-50 to-white">
               {messages.map((msg, idx) => (
@@ -165,7 +219,7 @@ export default function MeetupPage() {
                   className={`rounded-lg p-3 text-sm max-w-[80%] break-words ${
                     msg.sender === "me"
                       ? "bg-blue-500 text-white ml-auto shadow-md"
-                      : "bg-gray-100 text-black mr-auto shadow"
+                      : "bg-gray-100 text-gray-900 mr-auto shadow"
                   }`}
                 >
                   {msg.text && <div>{msg.text}</div>}
@@ -185,7 +239,7 @@ export default function MeetupPage() {
                     onChange={handleFile}
                   />
                   <span className="p-2 bg-gray-100 rounded-full hover:bg-gray-200 transition-all">
-                    <ImageIcon size={20} className="text-black" color="black" />
+                    <ImageIcon size={20} />
                   </span>
                 </label>
                 {image && (
@@ -202,7 +256,7 @@ export default function MeetupPage() {
                 <input
                   type="text"
                   placeholder="Type your message..."
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black placeholder-black"
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   value={input}
                   onChange={e => setInput(e.target.value)}
                   onKeyDown={e => { if (e.key === "Enter") handleSend(); }}
