@@ -1,5 +1,6 @@
 import express from "express";
 import mongoose from "mongoose";
+import http from "http";
 import dotenv from "dotenv";
 dotenv.config();
 import cors from "cors";
@@ -14,12 +15,24 @@ import router from "./routes/googleAuth.js";
 import user from "./routes/userRouter.js";
 import listing from "./routes/listingRouter.js";
 import bidding from "./routes/biddingRouter.js";
+import review from "./routes/reviewRouter.js";
+
+import { initSocket } from "../socket/index.js";
 
 const app = express();
 
+const server = http.createServer(app);
+
 const PORT = process.env.PORT || 5000;
 
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL || "http://localhost:3000",
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -41,6 +54,7 @@ app.use("/api/auth", router);
 app.use("/api/users", user);
 app.use("/api/listings", listing);
 app.use("/api/bidding", bidding);
+app.use("api/review", review);
 
 const connectDB = async () => {
   try {
@@ -53,6 +67,7 @@ const connectDB = async () => {
 };
 
 connectDB();
+initSocket(server);
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);

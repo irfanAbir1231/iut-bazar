@@ -1,28 +1,34 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
 import { MessageCircle, Image as ImageIcon, X } from "lucide-react";
+import Image from "next/image";
 
 // Demo listing data (replace with real fetch in production)
 const demoListing = {
   id: 1,
   title: "MacBook Pro M2 14-inch",
-  price: 85000,
+  description: "Apple M2, 16GB RAM, 512GB SSD. Used for university projects. No scratches, battery health 98%.",
+  price: 95000, // Actual price
+  suggestedPrice: 85000,
   condition: "Like New",
   university: "BUET",
+  location: "Dhaka, Bangladesh",
+  yearOfUse: 1,
   imageUrl: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400",
   category: "Electronics",
   rating: 4.9,
   seller: "Ahmed Hassan",
 };
 
+
 export default function MeetupPage() {
+  // Chat logic (unchanged)
   const [chatOpen, setChatOpen] = useState(false);
   interface Message {
     text: string;
     sender: string;
     image?: string;
   }
-
   const [messages, setMessages] = useState<Message[]>([
     { text: "Hi, is this still available?", sender: "me" },
     { text: "Yes, it is!", sender: "seller" },
@@ -32,13 +38,11 @@ export default function MeetupPage() {
   const [input, setInput] = useState("");
   const [image, setImage] = useState<string | null>(null);
   const chatRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     if (chatRef.current) {
       chatRef.current.scrollTop = chatRef.current.scrollHeight;
     }
   }, [chatOpen, messages]);
-
   const handleSend = () => {
     if (!input.trim() && !image) return;
     setMessages((msgs) => [
@@ -47,7 +51,6 @@ export default function MeetupPage() {
     ]);
     setInput("");
     setImage(null);
-    // Simulate seller reply
     setTimeout(() => {
       setMessages((msgs) => [
         ...msgs,
@@ -55,7 +58,6 @@ export default function MeetupPage() {
       ]);
     }, 1000);
   };
-
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -66,11 +68,58 @@ export default function MeetupPage() {
     reader.readAsDataURL(file);
   };
 
+  // Bidding logic
+  const [bidAmount, setBidAmount] = useState<number | "">("");
+  const [highestBid, setHighestBid] = useState<number>(demoListing.suggestedPrice);
+  // const [bidding, setBidding] = useState(false); // Not used, remove to fix warning
+  const [timer, setTimer] = useState<number>(60); // 1 minute
+  const [timerActive, setTimerActive] = useState(false);
+  const [bidStatus, setBidStatus] = useState<string>("");
+  // Demo: user credits
+  const [userCredits, setUserCredits] = useState<number>(100000000);
+
+  const [winner, setWinner] = useState<string | null>(null);
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (timerActive && timer > 0) {
+      interval = setInterval(() => setTimer((t) => t - 1), 1000);
+    } else if (timer === 0 && timerActive) {
+      setBidStatus("Bidding ended. Highest bidder wins!");
+      setTimerActive(false);
+      setWinner("You"); // For demo, assume current user is winner
+    }
+    return () => clearInterval(interval);
+  }, [timerActive, timer]);
+
+  const handleBid = () => {
+    if (typeof bidAmount !== "number" || bidAmount < highestBid + 10) {
+      setBidStatus(`Bid must be at least ${highestBid + 10} credits.`);
+      return;
+    }
+    if (bidAmount > userCredits) {
+      setBidStatus("You cannot bid more than your available credits.");
+      return;
+    }
+    setHighestBid((prev) => {
+      const newBid = (typeof bidAmount === "number" ? bidAmount : prev + 10);
+      setUserCredits((c) => c - newBid);
+      setBidStatus("Bid placed! Waiting for seller response or timer to end.");
+      if (!timerActive) {
+        setTimer(10);
+        setTimerActive(true);
+      }
+      setBidAmount("");
+      
+      return newBid;
+    });
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-4 flex flex-col items-center">
-      <div className="max-w-2xl w-full bg-white rounded-2xl shadow-xl p-8 mb-8">
-        <div className="flex flex-col md:flex-row gap-8">
-          <img
+      <div className="max-w-5xl w-full flex flex-col md:flex-row gap-8 items-start">
+        {/* Product Details Left */}
+        <div className="w-full md:w-[calc(60%-1rem)] bg-white rounded-2xl shadow-xl p-8 mb-8 self-start">
+          <Image
             src={demoListing.imageUrl}
             alt={demoListing.title}
             className="w-full md:w-64 h-48 object-cover rounded-xl border"
@@ -121,7 +170,7 @@ export default function MeetupPage() {
                 >
                   {msg.text && <div>{msg.text}</div>}
                   {msg.image && (
-                    <img src={msg.image} alt="sent" className="mt-2 max-h-32 rounded border" />
+                    <Image src={msg.image} alt="sent" width={128} height={64} className="mt-2 max-h-32 rounded border" style={{ objectFit: "cover" }} />
                   )}
                 </div>
               ))}
@@ -141,7 +190,7 @@ export default function MeetupPage() {
                 </label>
                 {image && (
                   <div className="relative">
-                    <img src={image} alt="preview" className="h-10 w-10 object-cover rounded" />
+                    <Image src={image} alt="preview" width={40} height={40} className="h-10 w-10 object-cover rounded" style={{ objectFit: "cover" }} />
                     <button
                       className="absolute -top-2 -right-2 bg-white rounded-full p-1 text-gray-500 hover:text-red-500"
                       onClick={() => setImage(null)}
@@ -170,9 +219,6 @@ export default function MeetupPage() {
           </div>
         </div>
       )}
-      <div>
-        Meetup page content here.
-      </div>
     </div>
   );
 }
