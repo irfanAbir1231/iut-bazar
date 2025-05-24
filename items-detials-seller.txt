@@ -1,0 +1,7 @@
+this is the product detials page pf the seller "/listings/item-details/seller"
+// the seller will see the details of the item he posted
+// the seller will see the list of users who have messaged him, and he can click on a user to see the chat with that user.(already implemented)
+// the seller can also see the bids on the item and accept or reject them
+
+the bididng information will be in a separete section, he can see how much time is left of his item before the bidding ends
+he  will get the notification when an item is sold 
