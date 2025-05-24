@@ -1,0 +1,24 @@
+So this is the items details page for the buyer 
+the page will contain
+- title
+-description
+-image
+-location
+-year/(S) of use(1,2,3+)(dropdown)
+-ACTUAL prize
+-suggested prize
+and all the necessary ifnormation  which is provided buy the seller
+
+in another section there will be bidding system.  The  byer can bid any  amount he wants as long as it is greater than or equal tto 10 credits more than the suggested price
+when user bids, the  that amount of credits woill be deducted from his account and the seller will be notified of the bid
+// the seller can accept or reject the bid, if he accepts the bid then the buyer will be notified and the item will be marked as sold
+// the seller can also reject the bid and the buyer will be notified of the rejection
+when the the first buyer bids in an profuduct, a timer will start counting down from 1 minutes.
+if the seller accepts the bid then the timer will stop and the item will be marked as sold
+any user can bid on the item, but only the first user to bid will start the timer
+if the timer ends the last bidder or the highest bidder's credit will be deducted and the item will be marked as sold
+the rest other bidders will be notified that they have lost the bid and their credits will be refunded
+the buyer cannot bid on an item if he has credit less than the current price of the item in his account
+whenever he bids the bid avlue goes up by that value
+
+please add these in  the item-details page
