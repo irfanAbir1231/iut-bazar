@@ -602,10 +602,7 @@ const FloatingChatButton = () => {
     if (!input.trim()) return;
     setLoading(true);
     setError("");
-    const newMessages = [
-      ...messages,
-      { role: "user", content: input },
-    ];
+    const newMessages = [...messages, { role: "user", content: input }];
     setMessages(newMessages);
     setInput("");
     try {
@@ -653,7 +650,10 @@ const FloatingChatButton = () => {
             </h3>
             <p className="text-sm text-gray-600">How can I help you today?</p>
           </div>
-          <div ref={chatRef} className="p-6 space-y-3 max-h-[32rem] min-h-[20rem] overflow-y-auto bg-gray-50">
+          <div
+            ref={chatRef}
+            className="p-6 space-y-3 max-h-[32rem] min-h-[20rem] overflow-y-auto bg-gray-50"
+          >
             {messages
               .filter((m) => m.role !== "system")
               .map((m, i) => (
@@ -669,7 +669,10 @@ const FloatingChatButton = () => {
                 </div>
               ))}
           </div>
-          <form onSubmit={handleSend} className="p-4 border-t border-gray-200 flex gap-2">
+          <form
+            onSubmit={handleSend}
+            className="p-4 border-t border-gray-200 flex gap-2"
+          >
             <input
               type="text"
               placeholder="Type your message..."
@@ -732,24 +735,21 @@ export default function EnhancedStudMarket() {
   }, [sidebarOpen]);
 
   useEffect(() => {
-    // Check for token in URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get("token");
-    if (token) {
-      // Fetch user info from backend
-      fetch("http://localhost:5000/api/auth/me", {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-        .then((res) => res.json())
-        .then((userData) => {
-          localStorage.setItem("user", JSON.stringify(userData));
-          setUser(userData);
-          // Remove token from URL
-          const newUrl = window.location.origin + window.location.pathname;
-          window.history.replaceState({}, document.title, newUrl);
-        });
+    // If user is not set but authToken exists, fetch user info
+    if (!user && typeof window !== "undefined") {
+      const token = localStorage.getItem("authToken");
+      if (token) {
+        fetch("http://localhost:5000/api/auth/me", {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+          .then((res) => res.json())
+          .then((userData) => {
+            localStorage.setItem("user", JSON.stringify(userData));
+            setUser(userData);
+          });
+      }
     }
-  }, []);
+  }, [user]);
 
   const Hamburger = () =>
     !sidebarOpen ? (
