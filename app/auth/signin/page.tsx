@@ -43,7 +43,7 @@ const LoginForm = () => {
       }
       // Store token or user info as needed
       alert("Login successful!");
-      // window.location.href = "/"; // redirect if needed
+      window.location.href = "/"; // redirect if needed
     } catch (err: any) {
       setError(err?.message || "Login failed");
     }

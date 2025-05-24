@@ -646,14 +646,14 @@ const FloatingChatButton = () => {
       </button>
 
       {isOpen && (
-        <div className="absolute bottom-16 right-0 w-80 bg-white rounded-2xl shadow-2xl border border-gray-200 transform transition-all duration-300">
+        <div className="absolute bottom-20 right-0 w-96 bg-white rounded-2xl shadow-2xl border border-gray-200 transform transition-all duration-300">
           <div className="p-4 border-b border-gray-200">
             <h3 className="font-semibold text-gray-900">
               StudMarket Assistant
             </h3>
             <p className="text-sm text-gray-600">How can I help you today?</p>
           </div>
-          <div ref={chatRef} className="p-4 space-y-3 max-h-96 overflow-y-auto bg-gray-50">
+          <div ref={chatRef} className="p-6 space-y-3 max-h-[32rem] min-h-[20rem] overflow-y-auto bg-gray-50">
             {messages
               .filter((m) => m.role !== "system")
               .map((m, i) => (
