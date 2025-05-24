@@ -659,10 +659,10 @@ const FloatingChatButton = () => {
               .map((m, i) => (
                 <div
                   key={i}
-                  className={`mb-2 p-2 rounded text-sm ${
+                  className={`mb-2 p-2 rounded text-sm font-medium ${
                     m.role === "user"
-                      ? "bg-blue-100 text-right ml-10"
-                      : "bg-green-100 text-left mr-10"
+                      ? "bg-blue-600 text-white text-right ml-10"
+                      : "bg-purple-100 text-purple-900 text-left mr-10"
                   }`}
                 >
                   <span className="block whitespace-pre-line">{m.content}</span>

@@ -15,8 +15,9 @@ const LoginForm = () => {
       // Process the token
       console.log("Received token:", token); // For debugging
 
-      // TODO: Store the token securely (e.g., in localStorage or context)
-      // localStorage.setItem('authToken', token);
+
+      // Store the token securely in localStorage
+      localStorage.setItem('authToken', token);
 
       // Remove token from URL for security and cleaner look
       const newUrl = new URL(window.location.origin + window.location.pathname);
@@ -41,11 +42,18 @@ const LoginForm = () => {
         setError(data.message || "Login failed");
         return;
       }
-      // Store token or user info as needed
+      // Store token in localStorage for persistent login
+      if (data.token) {
+        localStorage.setItem('authToken', data.token);
+      }
       alert("Login successful!");
-      window.location.href = "/"; // redirect if needed
-    } catch (err: any) {
-      setError(err?.message || "Login failed");
+      window.location.href = "/";
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message || "Login failed");
+      } else {
+        setError("Login failed");
+      }
     }
   };
 
