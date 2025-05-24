@@ -13,7 +13,6 @@ export const createListing = async (req, res, next) => {
       location,
       usedTime,
       pricingMode,
-      visibility,
       condition,
       category,
       university,
@@ -37,7 +36,6 @@ export const createListing = async (req, res, next) => {
       pricingMode,
       location,
       usedTime,
-      visibility,
       condition,
       category,
       biddingEndTime:
@@ -100,7 +98,7 @@ export const getAllApprovedListings = async (req, res, next) => {
 
     const listings = await Listing.find(filters).populate(
       "owner",
-      "name university"
+      "university"
     );
 
     res.json(listings);

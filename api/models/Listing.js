@@ -30,7 +30,6 @@ const listingSchema = new Schema(
     },
     usedTime: {
       type: Number,
-      required: true,
     },
 
     type: {
@@ -43,7 +42,7 @@ const listingSchema = new Schema(
       enum: ["fixed", "bidding", "hourly"],
       required: true,
     },
-    actualPrice: {
+    price: {
       type: Number,
       required: true,
       min: 0,
